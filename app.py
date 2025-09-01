@@ -7,8 +7,7 @@ from src.config import get_options
 from src.merge_files import merge_teacher_files
 from src.utils import ROOT_DIR
 from src.stat import age_distribution,title_distribution,yearly_application,teacher_projects,pie_chart
-from glob import glob
-import os
+
 st.set_page_config(page_title="教师基本数据登记与统计", page_icon="🧑‍🏫", layout="wide")
 
 DEP_NAME = get_options("department")

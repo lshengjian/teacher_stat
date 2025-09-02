@@ -19,7 +19,7 @@ def age_distribution(df_basic: pd.DataFrame, age_bins: List[List[int]]) -> Tuple
     """
     total = len(df_basic)
     # 保证年龄段为有序分类
-    labels = [f"{s}-{e}" for s, e in age_bins] + [f">{age_bins[-1][1]}"]
+    labels =  [f"<{age_bins[0][0]}"]+[f"{s}-{e}" for s, e in age_bins] + [f">{age_bins[-1][1]}"]
     cat = pd.Categorical(df_basic["年龄段"], categories=labels, ordered=True)
     dist = pd.DataFrame(cat.value_counts()).reset_index()
     dist.columns = ["年龄段", "人数"]
@@ -44,7 +44,7 @@ def title_distribution(df_basic: pd.DataFrame, title_order: List[str], age_bins:
     dist.columns = ["职称", "人数"]
     dist["占比"] = (dist["人数"] / total).round(4) if total > 0 else 0
 
-    labels = [f"{s}-{e}" for s, e in age_bins] + [f">{age_bins[-1][1]}"]
+    labels =  [f"<{age_bins[0][0]}"]+[f"{s}-{e}" for s, e in age_bins] + [f">{age_bins[-1][1]}"]
     df_basic["年龄段"] = pd.Categorical(df_basic["年龄段"], categories=labels, ordered=True)
     pivot = pd.pivot_table(df_basic, index="职称", columns="年龄段", values="工号", aggfunc="count", fill_value=0)
     pivot = pivot.reindex(title_order, fill_value=0).reset_index()

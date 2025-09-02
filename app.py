@@ -12,6 +12,15 @@ st.set_page_config(page_title="教师基本数据登记与统计", page_icon="�
 
 DEP_NAME = get_options("department")
 st.title(f"🧑‍🏫 {DEP_NAME} 教师基本数据登记、合并与统计")
+# Session state 初始化
+for key in ["df_basic", "df_proj"]:
+    if key not in st.session_state:
+        st.session_state[key] = pd.DataFrame()
+
+data_dir = ROOT_DIR / "data"
+fname = data_dir / (get_options('department') + '.xlsx')
+st.session_state.df_basic = pd.read_excel(fname, sheet_name="基本资料")
+st.session_state.df_proj = pd.read_excel(fname, sheet_name="项目资料")
 
 # 侧边栏功能选项
 with st.sidebar:
@@ -23,15 +32,9 @@ with st.sidebar:
     )
 
 
-# Session state 初始化
-for key in ["df_basic", "df_proj"]:
-    if key not in st.session_state:
-        st.session_state[key] = pd.DataFrame()
-
-
 if page == "上传合并":
     st.subheader("下载教师个人档案模板")
-    template_dir = Path(__file__).parent / "templates"
+    template_dir =ROOT_DIR / "data/templates"
     template_files = list(template_dir.glob("*.xlsx"))
     if template_files:
         for tf in template_files:
@@ -45,7 +48,7 @@ if page == "上传合并":
 
     st.subheader("上传教师个人档案（多个）")
     uploaded = st.file_uploader(
-        "请选择 .xlsx 文件（文件名必须为：专业-工号-姓名-个人档案.xlsx）",
+        "请选择 .xlsx 文件，文件名必须为：专业-工号-姓名-个人档案.xlsx",
         type=["xlsx", "xls"],
         accept_multiple_files=True
     )
@@ -62,39 +65,38 @@ if page == "上传合并":
         st.success(f"汇总文件：{fname}，共 {len(all_base)} 条基本资料，{len(all_projects)} 条项目资料。")
 elif page == "教师结构":
     st.subheader("专业教师结构统计")
-    dfb = st.session_state.df_basic.copy()
-    if  dfb.empty:
-        data_dir = ROOT_DIR / "data"
-        fname = data_dir / (get_options('department') + '.xlsx')
-        st.session_state.df_basic = dfb = pd.read_excel(fname, sheet_name="基本资料")
-        st.session_state.df_proj = pd.read_excel(fname, sheet_name="项目资料")
-
-
+    dfb = st.session_state.df_basic
     majors = sorted(dfb["专业"].dropna().unique().tolist())
     sel_majors = st.multiselect("选择专业", options=majors, default=majors, key="stats_major")
     dfb2 = dfb[dfb["专业"].isin(sel_majors)] if sel_majors else dfb
-
     left, right = st.columns(2)
     with left:
         st.markdown("a) 按年龄段（饼图 + 各年龄段内职称小计）")
         dist_age, pivot_title_by_age = age_distribution(dfb2, get_options("age_bins"))
         st.plotly_chart(pie_chart(dist_age, "年龄段", "人数", "年龄段人数占比"), use_container_width=True)
-        st.dataframe(pivot_title_by_age, use_container_width=True)
+        #st.dataframe(pivot_title_by_age, use_container_width=True)
     with right:
         st.markdown("b) 按职称（饼图 + 各职称下的年龄段小计）")
         dist_title, pivot_age_by_title = title_distribution(dfb2, get_options("title_categories"), get_options("age_bins"))
         st.plotly_chart(pie_chart(dist_title, "职称", "人数", "职称人数占比"), use_container_width=True)
+    with st.columns(1)[0]:
         st.dataframe(pivot_age_by_title, use_container_width=True)
+        # 下载统计结果为 stat.xlsx
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            pivot_title_by_age.to_excel(writer, sheet_name="按年龄段职称统计")
+            pivot_age_by_title.to_excel(writer, sheet_name="按职称年龄段统计")
+        output.seek(0)
+        st.download_button(
+            label="下载统计结果 stat.xlsx",
+            data=output,
+            file_name="stat.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 
 elif page == "项目情况":
     st.subheader("专业教师项目情况")
- 
     dfp = st.session_state.df_proj.copy()
-    if  dfp.empty:
-        data_dir = ROOT_DIR / "data"
-        fname = data_dir / (get_options('department') + '.xlsx')
-        st.session_state.df_proj = dfp = pd.read_excel(fname, sheet_name="项目资料")
-
     majors = sorted(dfp["专业"].dropna().unique().tolist())
     sel_majors = st.multiselect("选择专业", options=majors, default=majors, key="proj_major")
     dfp2 = dfp.copy()

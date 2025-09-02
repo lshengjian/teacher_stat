@@ -1,6 +1,6 @@
 import os
 from datetime import date, datetime
-from typing import Dict, List, Tuple, Union, Optional, Iterable
+from typing import  List,  Union, Optional, Iterable
 from pathlib import Path
 import pandas as pd
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -36,15 +36,18 @@ def label_age_bins(age: Union[int, float, None], bins: List[List[int]]) -> Optio
         # 区间为闭区间 [start, end]
         if start <= age <= end:
             return f"{start}-{end}"
-    return f">{bins[-1][1]}" if bins else None
+    if age<bins[0][0]:
+            return  f"<{bins[0][0]}"
+    if age>bins[-1][1]:
+            return f">{bins[-1][1]}"
+    return None
 
 def order_age_categories(bins: List[List[int]]) -> List[str]:
+    labels.append(f"<{bins[0][0]}")
     labels = [f"{s}-{e}" for s, e in bins]
     labels.append(f">{bins[-1][1]}")
     return labels
 
-def get_department(major: str, cfg: Dict) -> str:
-    return cfg.get("major_to_department", {}).get(major, "未知")
 
 def is_supported_excel(filename: str) -> bool:
     _, ext = os.path.splitext(filename)

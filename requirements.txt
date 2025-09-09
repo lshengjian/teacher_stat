@@ -1,5 +1,6 @@
 pandas>=2.0
 openpyxl>=3.1
+xlsxwriter>=3.2.5
 streamlit>=1.33
 Faker>=18.9
 pytest>=7.0

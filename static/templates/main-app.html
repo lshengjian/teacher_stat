@@ -1,0 +1,35 @@
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">🏫 学院师生成长管理系统</h1>
+      
+      <!-- 导航 -->
+      <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+          <a class="nav-link" :class="{active: state.tab.value === 'list'}" @click="state.tab.value='list'" href="#">教师列表</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" :class="{active: state.tab.value === 'form'}" @click="state.tab.value='form'; resetForm()" href="#">新增/编辑</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" :class="{active: state.tab.value === 'stat'}" @click="state.tab.value='stat'" href="#">数据统计</a>
+        </li>
+      </ul>
+      
+      <!-- 教师列表 -->
+      <div v-if="state.tab.value === 'list'">
+        <teacher-list :state="state"></teacher-list>
+      </div>
+      
+      <!-- 新增/编辑表单 -->
+      <div v-if="state.tab.value === 'form'">
+        <teacher-form :state="state"></teacher-form>
+      </div>
+      
+      <!-- 统计视图 -->
+      <div v-if="state.tab.value === 'stat'">
+        <stat-view :state="state"></stat-view>
+      </div>
+    </div>
+  </div>
+</div>

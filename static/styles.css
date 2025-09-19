@@ -1,0 +1,25 @@
+/* 可以在这里添加自定义样式，但大部分样式由Bootstrap提供 */
+body { 
+    background-color: #f8f9fa;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: bold;
+}
+
+.table th {
+    font-weight: 600;
+}
+
+.btn {
+    font-weight: 500;
+}
+
+.form-label {
+    font-weight: 500;
+}

@@ -1,8 +1,14 @@
 from datetime import date
+from src.utils import load_define
 from src.utils import get_years
 from .database import db
 class Teacher(db.Model):
     __tablename__ = 'teachers'
+    id = db.Column(db.Integer, primary_key=True)
+    # 根据 load_define 自动生成字段，跳过以 @ 开头的计算字段
+    #_defines = load_define('teacher')
+    
+
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.String(6), unique=True, nullable=False)
     name = db.Column(db.String(50), nullable=False)
@@ -20,7 +26,9 @@ class Teacher(db.Model):
     professional_title = db.Column(db.String(100))
     hire_date = db.Column(db.Date)
     work_experience = db.Column(db.Text)
-    main_courses = db.Column(db.Text)
+    main_courses = db.Column(db.Text)   
+
+
 
     @property
     def age(self):

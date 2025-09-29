@@ -1,6 +1,9 @@
-from flask import Flask,request, jsonify
-
-from src.models import Teacher,DictData,init_dict_data,db,app
+# run.py
+from src import create_app
+from src.models import db,init_dict_data,DictData,Teacher
+from flask import request, jsonify
+# 创建一个应用实例
+app = create_app()
 from src.routes import get_teachers, create_teacher, export_teachers, update_teacher,delete_teacher,export_stat_teachers
 
 from src.utils import  get_age_title_stat
@@ -40,11 +43,12 @@ def stat_age_title_export():
     teachers = Teacher.query.all()
     return export_stat_teachers(teachers, cut_points)
 
-# === 初始化数据库 ===
-with app.app_context():
-    db.create_all()
-    init_dict_data()
-
-# to run the application: python main.py
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # 在应用上下文中创建所有数据库表
+    # 这只需要在第一次运行时执行，或者在模型更改后执行
+    with app.app_context():
+        
+        db.create_all()
+        init_dict_data()
+
+    app.run(debug=True)

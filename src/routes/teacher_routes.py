@@ -3,7 +3,7 @@ from datetime import date
 import pandas as pd
 from io import BytesIO
 from src.models import Teacher,db
-from src.utils import get_age_title_stat
+from src.utils import get_age_title_stat,load_define
 
 
 def get_teachers():
@@ -44,11 +44,15 @@ def get_teachers():
 
 def create_teacher():
     data = request.json
+    
     if 'birth_date' in data and data['birth_date']:
         data['birth_date'] = date.fromisoformat(data['birth_date'])
     if 'hire_date' in data and data['hire_date']:
         data['hire_date'] = date.fromisoformat(data['hire_date'])
     teacher = Teacher(**data)
+    print(data)
+    print(teacher.to_dict())
+
     db.session.add(teacher)
     db.session.commit()
     return jsonify(teacher.to_dict()), 201
@@ -56,6 +60,8 @@ def create_teacher():
 def update_teacher(teacher_id):
     teacher = Teacher.query.get_or_404(teacher_id)
     data = request.json
+    print(data)
+    # 获取字典数据
     
     # 排除计算属性和关系属性
     excluded_keys = ['age', 'years_in_school']
@@ -108,28 +114,13 @@ def export_teachers():
     teachers = [t.to_dict() for t in query.all()]
 
     df = pd.DataFrame(teachers)
-    col_map = {
-        'employee_id': '工号',
-        'name': '姓名',
-        'major': '专业',
-        'birth_date': '出生日期',
-        'age': '年龄',
-        'gender': '性别',
-        'highest_education': '最高学历',
-        'highest_degree': '最高学位',
-        'title': '职称',
-        'degree_major_name': '学位专业名称',
-        'degree_institution': '学位授予单位',
-        'has_teaching_cert': '是否有教学资格证书',
-        'position': '职位',
-        'has_industry_background': '是否有行业背景',
-        'professional_title': '专业职称',
-        'hire_date': '入职日期',
-        'work_experience': '工作经历',
-        'main_courses': '主讲课程',
-        'years_in_school': '入校年限',
-    }
-
+    dfs=load_define('teacher')
+    col_map={}
+    for f in dfs:
+        name=f.get('name_en','').strip()
+        if name.startswith('@'):
+            name=name[1:]
+        col_map[name]=f.get('name_zh','')
 
   
     df = df.rename(columns=col_map)
@@ -137,12 +128,6 @@ def export_teachers():
     bool_cols = df.select_dtypes(include='bool').columns
     df[bool_cols] = df[bool_cols].replace({True: '是', False: '否'})
 
-    # 处理日期字段
-    # if 'birth_date' in df.columns:
-    #     df['birth_date'] = df['birth_date'].map(lambda x: x.strftime('%Y-%m-%d') if x else '')
-    # if 'hire_date' in df.columns:
-    #     df['hire_date'] = df['hire_date'].map(lambda x: x.strftime('%Y-%m-%d') if x else '')
-    
     output = BytesIO()
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name='教师信息')

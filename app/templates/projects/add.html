@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}添加项目{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>添加项目</h2>
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="name">项目名称 <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="project_no">项目编号</label>
+            <input type="text" class="form-control" id="project_no" name="project_no">
+        </div>
+        
+        <div class="form-group">
+            <label for="teacher_id">负责人 <span class="text-danger">*</span></label>
+            <select class="form-control" id="teacher_id" name="teacher_id" required>
+                <option value="">请选择</option>
+                {% for teacher in teachers %}
+                <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="project_level_id">项目级别</label>
+            <select class="form-control" id="project_level_id" name="project_level_id">
+                <option value="">请选择</option>
+                {% for level in project_levels %}
+                <option value="{{ level.id }}">{{ level.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="start_date">开始日期</label>
+            <input type="date" class="form-control" id="start_date" name="start_date">
+        </div>
+        
+        <div class="form-group">
+            <label for="end_date">结束日期</label>
+            <input type="date" class="form-control" id="end_date" name="end_date">
+        </div>
+        
+        <div class="form-group">
+            <label for="funding">项目经费</label>
+            <input type="number" step="0.01" class="form-control" id="funding" name="funding" min="0">
+        </div>
+        
+        <div class="form-group">
+            <label for="role">角色</label>
+            <input type="text" class="form-control" id="role" name="role">
+        </div>
+        
+        <div class="form-group">
+            <label for="status">状态</label>
+            <select class="form-control" id="status" name="status">
+                <option value="">请选择</option>
+                <option value="进行中">进行中</option>
+                <option value="已完成">已完成</option>
+                <option value="已立项">已立项</option>
+                <option value="已结题">已结题</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">项目描述</label>
+            <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('projects.project_list') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

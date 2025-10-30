@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}教师详情{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>教师详情</h2>
+    <a href="{{ url_for('teachers.teacher_list') }}" class="btn btn-secondary mb-3">返回列表</a>
+    
+    <div class="card">
+        <div class="card-header">
+            基本信息
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>姓名：</strong>{{ teacher.name }}</p>
+                    <p><strong>性别：</strong>{{ teacher.gender }}</p>
+                    <p><strong>出生日期：</strong>{{ teacher.birth_date.strftime('%Y-%m-%d') if teacher.birth_date else '未设置' }}</p>
+                    <p><strong>工号：</strong>{{ teacher.employee_id }}</p>
+                    <p><strong>是否具有教师资格证：</strong>{{ '是' if teacher.has_teaching_certificate else '否' }}</p>
+                    <p><strong>是否具有行业经验：</strong>{{ '是' if teacher.has_industry_experience else '否' }}</p>
+                    <p><strong>联系电话：</strong>{{ teacher.phone or '未设置' }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>电子邮箱：</strong>{{ teacher.email or '未设置' }}</p>
+                    <p><strong>入职日期：</strong>{{ teacher.hire_date.strftime('%Y-%m-%d') if teacher.hire_date else '未设置' }}</p>
+                    <p><strong>部门：</strong>{{ teacher.department or '未设置' }}</p>
+                    <p><strong>专业：</strong>{{ teacher.major.name if teacher.major else '未设置' }}</p>
+                    <p><strong>学历：</strong>{{ teacher.education.name if teacher.education else '未设置' }}</p>
+                    <p><strong>学位：</strong>{{ teacher.degree.name if teacher.degree else '未设置' }}</p>
+                    <p><strong>职务：</strong>{{ teacher.position.name if teacher.position else '未设置' }}</p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <p><strong>研究方向：</strong>{{ teacher.research_direction or '未设置' }}</p>
+                <p><strong>个人简介：</strong></p>
+                <p>{{ teacher.introduction or '未设置' }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 项目信息 -->
+    <div class="card mt-4">
+        <div class="card-header">
+            项目信息
+        </div>
+        <div class="card-body">
+            {% if teacher.projects %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>项目名称</th>
+                            <th>项目编号</th>
+                            <th>项目级别</th>
+                            <th>起止时间</th>
+                            <th>经费</th>
+                            <th>角色</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in teacher.projects %}
+                        <tr>
+                            <td>{{ project.name }}</td>
+                            <td>{{ project.project_no or '-' }}</td>
+                            <td>{{ project.project_level.name if project.project_level else '-' }}</td>
+                            <td>{{ project.start_date.strftime('%Y-%m-%d') if project.start_date else '-' }} 至 {{ project.end_date.strftime('%Y-%m-%d') if project.end_date else '-' }}</td>
+                            <td>{{ project.funding }}</td>
+                            <td>{{ project.role or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>暂无项目信息</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- 论文信息 -->
+    <div class="card mt-4">
+        <div class="card-header">
+            论文信息
+        </div>
+        <div class="card-body">
+            {% if teacher.papers %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>论文标题</th>
+                            <th>期刊</th>
+                            <th>论文级别</th>
+                            <th>发表日期</th>
+                            <th>作者排序</th>
+                            <th>通讯作者</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paper in teacher.papers %}
+                        <tr>
+                            <td>{{ paper.title }}</td>
+                            <td>{{ paper.journal or '-' }}</td>
+                            <td>{{ paper.paper_level.name if paper.paper_level else '-' }}</td>
+                            <td>{{ paper.publish_date.strftime('%Y-%m-%d') if paper.publish_date else '-' }}</td>
+                            <td>{{ paper.author_order }}</td>
+                            <td>{{ '是' if paper.is_corresponding else '否' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>暂无论文信息</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

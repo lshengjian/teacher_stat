@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}注册{% endblock %}
+
+{% block content %}
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered mb-6">教师数据管理系统 - 用户注册</h1>
+            
+            <form method="POST" action="{{ url_for('auth.register') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="field">
+                    <label for="username" class="label">用户名</label>
+                    <div class="control">
+                        <input type="text" id="username" name="username" class="input" placeholder="用户名" required>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label for="email" class="label">邮箱</label>
+                    <div class="control">
+                        <input type="email" id="email" name="email" class="input" placeholder="邮箱" required>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label for="password" class="label">密码</label>
+                    <div class="control">
+                        <input type="password" id="password" name="password" class="input" placeholder="密码" required>
+                    </div>
+                </div>
+                
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">注册</button>
+                    </div>
+                    <div class="control">
+                        <a href="{{ url_for('auth.login') }}" class="button is-link">已有账号？登录</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

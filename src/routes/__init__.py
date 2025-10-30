@@ -1,1 +1,0 @@
-from .teacher_routes import get_teachers, create_teacher,update_teacher, export_teachers,export_stat_teachers,delete_teacher

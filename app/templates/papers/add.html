@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}添加论文{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>添加论文</h2>
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="title">论文标题 <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="teacher_id">作者 <span class="text-danger">*</span></label>
+            <select class="form-control" id="teacher_id" name="teacher_id" required>
+                <option value="">请选择</option>
+                {% for teacher in teachers %}
+                <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="journal">期刊名称</label>
+            <input type="text" class="form-control" id="journal" name="journal">
+        </div>
+        
+        <div class="form-group">
+            <label for="paper_level_id">论文级别</label>
+            <select class="form-control" id="paper_level_id" name="paper_level_id">
+                <option value="">请选择</option>
+                {% for level in paper_levels %}
+                <option value="{{ level.id }}">{{ level.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="publish_date">发表日期</label>
+            <input type="date" class="form-control" id="publish_date" name="publish_date">
+        </div>
+        
+        <div class="form-group">
+            <label for="author_order">作者排序</label>
+            <input type="number" class="form-control" id="author_order" name="author_order" min="1" value="1">
+        </div>
+        
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="is_corresponding" name="is_corresponding">
+            <label class="form-check-label" for="is_corresponding">是否为通讯作者</label>
+        </div>
+        
+        <div class="form-group">
+            <label for="doi">DOI</label>
+            <input type="text" class="form-control" id="doi" name="doi">
+        </div>
+        
+        <div class="form-group">
+            <label for="keywords">关键词</label>
+            <input type="text" class="form-control" id="keywords" name="keywords" placeholder="多个关键词用逗号分隔">
+        </div>
+        
+        <div class="form-group">
+            <label for="abstract">摘要</label>
+            <textarea class="form-control" id="abstract" name="abstract" rows="4"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('papers.paper_list') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

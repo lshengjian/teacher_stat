@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}管理员仪表板 - Flask博客{% endblock %}
+
+{% block content %}
+    <h1 class="title">管理员仪表板</h1>
+    
+    <div class="columns is-centered mb-6">
+        <div class="column is-half">
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content">
+                            <h3 class="subtitle">用户总数</h3>
+                            <p class="is-size-3 has-text-weight-bold">{{ total_users }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content">
+                            <h3 class="subtitle">文章总数</h3>
+                            <p class="is-size-3 has-text-weight-bold">{{ total_posts }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="field is-grouped mb-4">
+        <div class="control">
+            <h2 class="subtitle">发布博客最多的前10位用户</h2>
+        </div>
+        <div class="control ml-auto">
+            <a href="{{ url_for('admin.export_top_users') }}" class="button is-primary">
+                <i class="fas fa-file-excel"></i> 导出Excel
+            </a>
+        </div>
+    </div>
+    
+    {% if top_users %}
+        <div class="table-container">
+            <table class="table is-fullwidth is-hoverable">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>用户名</th>
+                        <th>文章数量</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in top_users %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.post_count }}</td>
+                            <td>
+                                <a href="{{ url_for('posts.user_posts', username=user.username) }}" class="button is-secondary">查看文章</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="notification is-info">
+            <p>暂无用户发布文章。</p>
+        </div>
+    {% endif %}
+{% endblock %}

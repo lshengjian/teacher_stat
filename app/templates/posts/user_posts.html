@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}{{ username }}的文章 - Flask博客{% endblock %}
+
+{% block content %}
+    <h1 class="title">{{ username }}的文章</h1>
+    
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <h2 class="subtitle"><a href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
+                <div class="is-size-7 text-gray-500 mb-3">
+                    <span>发布时间: {{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    {% if post.updated_at != post.created_at %}
+                        <span> · </span>
+                        <span>更新时间: {{ post.updated_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    {% endif %}
+                </div>
+                <div class="mb-4">
+                    {{ post.content[:300] }}{% if post.content|length > 300 %}...{% endif %}
+                </div>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <a href="{{ url_for('posts.post', post_id=post.id) }}" class="button is-primary">阅读全文</a>
+                    </div>
+                    {% if current_user.username == username %}
+                        <div class="control">
+                            <a href="{{ url_for('posts.edit_post', post_id=post.id) }}" class="button is-secondary">编辑</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="notification is-info">
+            <p>该用户暂无博客文章。</p>
+            {% if current_user.username == username %}
+                <a href="{{ url_for('posts.new_post') }}" class="button is-primary mt-3">写第一篇文章</a>
+            {% endif %}
+        </div>
+    {% endif %}
+    <a href="{{ url_for('main.index') }}" class="button is-secondary mt-4">返回首页</a>
+{% endblock %}

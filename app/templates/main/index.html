@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}教师数据管理系统{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="jumbotron">
+        <h1 class="display-4">欢迎使用教师数据管理系统</h1>
+        <p class="lead">本系统用于管理教师的基本信息、科研项目和论文发表情况，并提供数据统计功能。</p>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">教师总数</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ teacher_count }}</h5>
+                        <p class="card-text">名教师</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">项目总数</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project_count }}</h5>
+                        <p class="card-text">个项目</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">论文总数</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ paper_count }}</h5>
+                        <p class="card-text">篇论文</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a class="btn btn-primary btn-lg mr-2" href="{{ url_for('teachers.teacher_list') }}" role="button">教师管理</a>
+            <a class="btn btn-success btn-lg mr-2" href="{{ url_for('projects.project_list') }}" role="button">项目管理</a>
+            <a class="btn btn-info btn-lg mr-2" href="{{ url_for('papers.paper_list') }}" role="button">论文管理</a>
+            <a class="btn btn-warning btn-lg" href="{{ url_for('main.statistics') }}" role="button">数据统计</a>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">系统功能</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">教师基本信息的录入、查询、修改和删除</li>
+                        <li class="list-group-item">科研项目信息的管理和跟踪</li>
+                        <li class="list-group-item">学术论文发表情况的记录和统计</li>
+                        <li class="list-group-item">按职称、项目级别、论文级别等维度的统计分析</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">使用说明</div>
+                <div class="card-body">
+                    <p>1. 使用管理员账号登录系统</p>
+                    <p>2. 在左侧菜单选择相应的功能模块</p>
+                    <p>3. 可以添加、编辑、删除相关信息</p>
+                    <p>4. 访问统计页面查看数据汇总</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}关于 - Flask博客{% endblock %}
+
+{% block content %}
+    <h1 class="title">关于我们</h1>
+    
+    <div class="box">
+        <p class="mb-4">这是一个使用Flask和SQLite3开发的多用户博客系统。</p>
+        
+        <h2 class="subtitle mb-3">系统特点：</h2>
+        <ul class="list-disc pl-6 mb-6">
+            <li class="mb-2">用户注册和登录功能</li>
+            <li class="mb-2">用户可以发布、编辑和删除自己的博客文章</li>
+            <li class="mb-2">查看其他用户的博客文章</li>
+            <li class="mb-2">管理员可以查看统计数据，包括发布博客最多的前10位用户</li>
+        </ul>
+        
+        <p>感谢您使用我们的博客系统！</p>
+    </div>
+{% endblock %}

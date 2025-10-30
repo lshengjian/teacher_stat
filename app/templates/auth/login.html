@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}登录{% endblock %}
+
+{% block content %}
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered mb-6">教师数据管理系统 - 登录</h1>
+            
+            <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <div class="field">
+                    <label class="label" for="username">用户名</label>
+                    <div class="control">
+                        <input type="text" id="username" name="username" class="input" placeholder="用户名" required>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label class="label" for="password">密码</label>
+                    <div class="control">
+                        <input type="password" id="password" name="password" class="input" placeholder="密码" required>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-primary is-fullwidth">登录</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="has-text-centered mt-4">
+                <p>还没有账号？<a href="{{ url_for('auth.register') }}" class="has-text-primary">立即注册</a></p>
+                <p class="mt-2">默认管理员账号：admin / admin123</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
